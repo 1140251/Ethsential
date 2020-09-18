@@ -9,19 +9,18 @@ SOLIDITY_DEFAULT_VERSION = "0.6.4"
 
 def mount_volumes(dir_path):
     try:
+
         volume_bindings = {os.path.abspath(
-            dir_path): {'bind': '/' + dir_path.replace(':', ''), 'mode': 'rw'}}
+            dir_path): {'bind': '/analysis', 'mode': 'rw'}}
         return volume_bindings
     except os.error as err:
         print(err)
 
 
-def start_container(filePath, lang, volume_bindings, tool):
+def start_container(filePath, lang_version, volume_bindings, tool):
     container = None
     try:
-        lang_version = get_lang_version(filePath, lang)
-
-        cmd = tool.command.format(contract='/' + filePath.replace(
+        cmd = tool.command.format(contract='/analysis/' + os.path.basename(filePath).replace(
             '\\', '/'), version=lang_version)
         container = client.containers.run(tool.image,
                                           cmd,
@@ -57,10 +56,11 @@ def remove_container(container):
 def analyse_file(filePath, lang, tools):
 
     volume_bindings = mount_volumes(os.path.dirname(filePath))
+    lang_version = get_lang_version(filePath, lang)
     pool = multiprocessing.Pool()
     results = []
     results = [pool.apply(start_container, args=(
-        filePath, lang, volume_bindings, tool)) for tool in tools]
+        filePath, lang_version, volume_bindings, tool)) for tool in tools]
     pool.close()
     return results
 
