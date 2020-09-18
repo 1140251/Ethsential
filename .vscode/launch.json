@@ -1,0 +1,73 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Launch Client",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+      "outFiles": ["${workspaceRoot}/vscode-client/out/**/*.js"],
+      "preLaunchTask": {
+        "type": "npm",
+        "script": "watch"
+      },
+      "env": {
+        "VSCODE_DEBUG_MODE": "true"
+      }
+    },
+    {
+      "name": "Launch Server",
+      "type": "python",
+      "request": "launch",
+      "module": "server",
+      "args": ["tcp"],
+      "justMyCode": false,
+      "pythonPath": "${command:python.interpreterPath}",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Launch CLI",
+      "type": "python",
+      "request": "launch",
+      "module": "server",
+      "args": [
+        "cli",
+        "--file",
+        "server/examples/example-solidity.sol",
+        "-t",
+        "all"
+      ],
+      "justMyCode": false,
+      "subProcess": true,
+      "pythonPath": "${command:python.interpreterPath}",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Launch Install",
+      "type": "python",
+      "request": "launch",
+      "module": "server",
+      "args": ["install"],
+      "justMyCode": false,
+      "subProcess": true,
+      "pythonPath": "${command:python.interpreterPath}",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Client + Server",
+      "configurations": ["Launch Server", "Launch Client"]
+    }
+  ]
+}
