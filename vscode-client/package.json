@@ -14,7 +14,7 @@
     "onCommand:ethsential.analyse",
     "onCommand:ethsential.install"
   ],
-  "main": "./vscode-client/out/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -50,8 +50,8 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./vscode-client",
-    "watch": "tsc -w -p ./vscode-client"
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./"
   },
   "devDependencies": {
     "@types/vscode": "^1.47.0",
