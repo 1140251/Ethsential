@@ -39,4 +39,4 @@ class Mythril(Tool):
 
                 return Result(True, json_response, None).to_json()
 
-            return Result(False, None, result.error).to_json()
+            return Result(False, None, result["error"]).to_json()
