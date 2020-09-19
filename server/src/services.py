@@ -87,6 +87,6 @@ def install_tools(tools):
     for tool in tools:
         print('....installing ' + tool.image)
         try:
-            client.images.pull(tool.image+':latest')
+            client.images.pull(tool.image)
         except docker.errors.APIError as error:
             return error.explanation
