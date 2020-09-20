@@ -5,11 +5,15 @@ from .mythril import Mythril
 
 class ToolFactoryTest(unittest.TestCase):
 
-    def test_createTools_pass(self):
+    def test_create_mythril_pass(self):
         tools = ToolFactory.createTool('mythril')
         self.assertIsInstance(tools[0], Mythril)
 
-    def test_createTools_fail(self):
+    def test_create_all_pass(self):
+        tools = ToolFactory.createTool('all')
+        self.assertEqual(len(tools), 3)
+
+    def test_create_tool_fail(self):
         try:
             _ = ToolFactory.createTool('tool')
         except Exception as identifier:

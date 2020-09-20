@@ -32,13 +32,13 @@ else:
 
 
 setup(
-    name='ethsent',
+    name='EthSential',
     version=about["__version__"][1:],
     description='EthSential package for Python-Guide.org',
     long_description=readme,
     author='Daniel Dias',
     install_requires=[
-         'docker==0.23.3',
+        'docker==0.23.3',
         'pygls==0.9.0'
     ],
     # url='https://github.com/kennethreitz/samplemod',
