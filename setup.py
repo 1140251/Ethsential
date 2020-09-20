@@ -32,7 +32,7 @@ else:
 
 
 setup(
-    name='EthSential',
+    name='ethsential',
     version=about["__version__"][1:],
     description='EthSential package for Python-Guide.org',
     long_description=readme,
