@@ -46,5 +46,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm install vsce -g
+      - run: vsce login 1140251
       - run: vsce publish -p ${{ secrets.VSCE_PAT }}
         working-directory: ./vscode-client
