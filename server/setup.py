@@ -14,7 +14,7 @@ REQUIRES_PYTHON = ">=3.6.0"
 # If version is set to None then it will be fetched from __version__.py
 VERSION = None
 
-with open('README.rst') as f:
+with open('README.md') as f:
     readme = f.read()
 
 with open('LICENSE') as f:
