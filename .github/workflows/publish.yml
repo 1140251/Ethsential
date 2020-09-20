@@ -47,4 +47,4 @@ jobs:
       - run: npm install vsce -g
       - run: npm run vscode:prepublish
       - run: vsce publish -p ${{ secrets.VSCE_PAT }}
-        working-directory: vscode-client
+        working-directory: ./vscode-client
