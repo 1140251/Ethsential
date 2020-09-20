@@ -1,7 +1,8 @@
 {
   "name": "ethsential",
   "displayName": "EthSential",
-  "description": "",
+  "description": "Security analysis for Ethereum smart contracts",
+  "publisher": "1140251",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.47.0"
