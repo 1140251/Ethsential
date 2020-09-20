@@ -8,12 +8,8 @@ on:
     types: [created]
 
 jobs:
-  deploy:
+  deploy-pypi:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [8.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +29,15 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
+
+  deploy-vscode:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x]
+
+    steps:
       - name: Build and publish Extension
         if: success()
         uses: actions/setup-node@v1
