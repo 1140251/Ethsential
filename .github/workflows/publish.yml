@@ -38,16 +38,16 @@ jobs:
         node-version: [8.x]
 
     steps:
+      - uses: actions/checkout@v1
       - name: Build and publish Extension
-        if: success()
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-        working-directory: ./vscode-client
+        working-directory: vscode-client
       - run: npm install vsce -g
-        working-directory: ./vscode-client
+        working-directory: vscode-client
       - run: vsce publish -p $VSCE_PAT
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        working-directory: ./vscode-client
+        working-directory: vscode-client
