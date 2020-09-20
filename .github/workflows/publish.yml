@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x"
+          python-version: '3.x'
       - name: Install dependencies
 
         run: |
@@ -45,7 +45,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm install vsce -g
-      - run: npm run deploy
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      - run: npm run vscode:prepublish
+      - run: vsce publish -p ${{ secrets.VSCE_PAT }}
         working-directory: vscode-client
