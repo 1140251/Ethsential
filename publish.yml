@@ -11,6 +11,10 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    
+    strategy:
+    matrix:
+      node-version: [8.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,7 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
       working-directory: server
-    - name: Build and publish App
+    - name: Build and Publish App
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
@@ -32,8 +36,14 @@ jobs:
         python setup.py sdist bdist_wheel
         twine upload dist/*
       working-directory: server
-    - name: Publish
+    - name: Build and publish Extension
       if: success()
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+      run: npm install
+      run: npm install vsce --save-dev
       run: npm run deploy
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      working-directory: vscode-client
