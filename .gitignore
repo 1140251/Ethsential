@@ -2,6 +2,5 @@ out
 node_modules
 */node_modules
 *__pycache__
-client/server
 .vscode-test
 .pylintrc

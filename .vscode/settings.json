@@ -11,9 +11,6 @@
   "python.pythonPath": "C:\\Users\\Daniel.Dias\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
-  "python.testing.pytestArgs": [
-    "server"
-  ],
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
   "python.testing.pytestEnabled": true

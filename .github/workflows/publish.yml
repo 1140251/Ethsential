@@ -20,13 +20,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
       - name: Install dependencies
 
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
-        working-directory: server
       - name: Build and Publish App
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
@@ -34,7 +33,6 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
-        working-directory: server
       - name: Build and publish Extension
         if: success()
         uses: actions/setup-node@v1

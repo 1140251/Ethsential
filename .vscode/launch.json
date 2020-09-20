@@ -33,11 +33,11 @@
       "name": "Launch CLI",
       "type": "python",
       "request": "launch",
-      "module": "server",
+      "module": "ethsential",
       "args": [
         "cli",
         "--file",
-        "server/examples/example-solidity.sol",
+        "ethsential/examples/example-solidity.sol",
         "-t",
         "all"
       ],
@@ -53,7 +53,7 @@
       "name": "Launch Install",
       "type": "python",
       "request": "launch",
-      "module": "server",
+      "module": "ethsential",
       "args": ["install"],
       "justMyCode": false,
       "subProcess": true,

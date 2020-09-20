@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 # Package meta-data.
-NAME = "Ethsential"
+NAME = "EthSential"
 DESCRIPTION = "Security analysis for Ethereum smart contracts"
 # URL = "https://github.com/ConsenSys/mythril"
 AUTHOR = "Daniel Dias"
