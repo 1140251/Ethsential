@@ -37,18 +37,22 @@ async def doInstallFeat(ls: EthSencialLS, params):
     tools = []
     for tool in params.tools:
         tools.extend(ToolFactory.createTool(tool))
-    error = install_tools(tools)
-    if error is None:
+    try:
+        install_tools(tools)
         return '200'
-    return error
+    except Exception as e:
+        if hasattr(e, 'message'):
+            return getattr(e, 'message', repr(e))
+        else:
+            return e
 
 
-@ETHSENTIAL.feature(WORKSPACE_DID_CHANGE_CONFIGURATION)
+@ ETHSENTIAL.feature(WORKSPACE_DID_CHANGE_CONFIGURATION)
 async def didChangeWorkspace(ls: EthSencialLS, *args):
     return
 
 
-@ETHSENTIAL.feature(TEXT_DOCUMENT_DID_CHANGE)
+@ ETHSENTIAL.feature(TEXT_DOCUMENT_DID_CHANGE)
 def did_change(ls, params):
 
     text_doc = ls.workspace.get_document(params.textDocument.uri)

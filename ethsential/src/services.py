@@ -2,7 +2,6 @@ import os
 import multiprocessing
 import docker
 from solidity_parser import parser
-
 client = docker.from_env()
 SOLIDITY_DEFAULT_VERSION = "0.6.4"
 
@@ -88,5 +87,8 @@ def install_tools(tools):
         print('....installing ' + tool.image)
         try:
             client.images.pull(tool.image)
-        except docker.errors.APIError as error:
-            return error.explanation
+        except (docker.errors.APIError, docker.errors.BuildError, Exception) as error:
+            if hasattr(error, 'explanation'):
+                raise error
+            else:
+                raise ValueError('Docker not found')

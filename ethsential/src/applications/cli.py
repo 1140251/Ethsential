@@ -1,6 +1,7 @@
 import argparse
 import os
 import json
+import errno
 from time import time
 from ..services import analyse_file, install_tools
 from ..tools.tool_factory import ToolFactory
@@ -15,6 +16,9 @@ class Command():
             tools.extend(ToolFactory.createTool(tool))
         for file in args.file:
             # analyse files
+            if not os.path.exists(file):
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), file)
             if os.path.basename(file).endswith('.sol'):
                 files_to_analyze.append((file, 'solidity'))
             elif os.path.basename(file).endswith('.py'):
@@ -43,8 +47,7 @@ class Command():
                 json.dump(result, f, indent=2)
 
     def install(self):
-        error = install_tools(ToolFactory.createTool('all'))
-        print(error)
+        install_tools(ToolFactory.createTool('all'))
 
 
 CLI = Command()
