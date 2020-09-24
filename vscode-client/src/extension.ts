@@ -6,7 +6,10 @@ import {
   TextEditor,
   window,
   workspace,
-  TextEditorCursorStyle,
+  languages,
+  DocumentSelector,
+  ProgressOptions,
+  ProgressLocation,
 } from 'vscode';
 import * as path from 'path';
 import * as net from 'net';
@@ -20,6 +23,8 @@ import { TextDocumentIdentifier, RequestType } from 'vscode-languageserver';
 
 import * as Docker from 'dockerode';
 import { ToolCommandOutput } from './ToolResults';
+
+export let analysisRunning: boolean = false;
 
 let client: LanguageClient;
 
@@ -58,19 +63,33 @@ export function activate(context: ExtensionContext) {
     try {
       let tools: string[] = getActiveTools();
 
-      let result: ToolCommandOutput[] = await client.sendRequest(
-        new RequestType<ActiveAnalysisParams, ToolCommandOutput[], void, void>(
-          'analyse'
-        ),
-        {
-          textDocument: { uri },
-          lang: editor.document.languageId,
-          tools,
-        }
-      );
-      window.showInformationMessage(
-        `Analysis finished, found ${JSON.stringify(result)}`
-      );
+      if (!analysisRunning) {
+        analysisRunning = true;
+        let progressOptions: ProgressOptions = {
+          title: 'EthSential: Please wait while analysis is performed...',
+          location: ProgressLocation.Notification,
+          cancellable: false,
+        };
+        window.withProgress(progressOptions, async (progress, token) => {
+          let result: ToolCommandOutput[] = await client.sendRequest(
+            new RequestType<
+              ActiveAnalysisParams,
+              ToolCommandOutput[],
+              void,
+              void
+            >('analyse'),
+            {
+              textDocument: { uri },
+              lang: editor.document.languageId,
+              tools,
+            }
+          );
+          analysisRunning = false;
+          window.showInformationMessage(
+            `Analysis finished, found ${JSON.stringify(result)}`
+          );
+        });
+      }
     } catch (error) {
       window.showErrorMessage('Failed to analyse file');
     }

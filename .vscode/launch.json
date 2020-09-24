@@ -20,7 +20,7 @@
       "name": "Launch Server",
       "type": "python",
       "request": "launch",
-      "module": "server",
+      "module": "ethsential",
       "args": ["tcp"],
       "justMyCode": false,
       "pythonPath": "${command:python.interpreterPath}",
