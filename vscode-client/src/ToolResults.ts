@@ -1,7 +1,7 @@
 export interface ToolCommandOutput {
   success: boolean;
   error: string | null | undefined;
-  issues: ToolCommandIssues | null | undefined;
+  issues: ToolCommandIssues[] | null | undefined;
 }
 
 export interface ToolCommandIssues {

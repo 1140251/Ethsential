@@ -7,7 +7,6 @@ import {
   window,
   workspace,
   languages,
-  DocumentSelector,
   ProgressOptions,
   ProgressLocation,
 } from 'vscode';
@@ -23,7 +22,9 @@ import { TextDocumentIdentifier, RequestType } from 'vscode-languageserver';
 
 import * as Docker from 'dockerode';
 import { ToolCommandOutput } from './ToolResults';
+import { DiagnosticProvider } from './DiagnosticProvider';
 
+export let diagnosticsProvider: DiagnosticProvider;
 export let analysisRunning: boolean = false;
 
 let client: LanguageClient;
@@ -84,9 +85,14 @@ export function activate(context: ExtensionContext) {
               tools,
             }
           );
+          let problems = diagnosticsProvider.refreshDiagnostics(
+            editor.document,
+            result,
+            diagnosticCollection
+          );
           analysisRunning = false;
           window.showInformationMessage(
-            `Analysis finished, found ${JSON.stringify(result)}`
+            `Analysis finished, found ${JSON.stringify(problems)} problems`
           );
         });
       }
@@ -139,6 +145,10 @@ export function activate(context: ExtensionContext) {
     client = createLangServer();
   }
 
+  const diagnosticCollection = languages.createDiagnosticCollection(
+    'EthSential'
+  );
+  diagnosticsProvider = new DiagnosticProvider();
   context.subscriptions.push(
     client.start(),
     commands.registerTextEditorCommand('ethsential.analyse', analyse),
