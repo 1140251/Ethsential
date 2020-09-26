@@ -32,7 +32,7 @@ class Slither(Tool):
                             "severity": detector["impact"],
                             "pattern": detector["check"],
                             "description": detector["description"],
-                            "lines": element["source_mapping"]["lines"],
+                            "lines": [int(i) for i in element["source_mapping"]["lines"]],
                             "function": element["name"],
                             "contract": ""
                         }

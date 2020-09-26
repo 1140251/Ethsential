@@ -31,7 +31,7 @@ class Mythril(Tool):
                         "severity": issue["severity"],
                         "pattern": issue["title"],
                         "description": issue["description"],
-                        "lines": [issue["lineno"]],
+                        "lines": [int(issue["lineno"])],
                         "function": issue["function"],
                         "contract": issue["contract"],
                         "raw_output": issue

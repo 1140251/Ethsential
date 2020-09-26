@@ -40,7 +40,7 @@ class Securify(Tool):
                 for index, line in enumerate(data):
                     if "Severity:" in line:
                         json_response = {
-                            "Severity": line.replace("Severity:", '').strip(),
+                            "severity": line.replace("Severity:", '').strip(),
                             "pattern": "",
                             "description": "",
                             "type": "",
@@ -60,7 +60,9 @@ class Securify(Tool):
                             if "Type:" in description_line:
                                 break
                             description.append(description_line.strip())
-                        json_response['description'] = description
+                        separator = ' '
+                        json_response['description'] = separator.join(
+                            description)
                     elif "Type:" in line:
                         line = line.replace("Type:", '')
                         json_response['type'] = line.strip()
@@ -69,6 +71,6 @@ class Securify(Tool):
                         json_response['contract'] = line.strip()
                     elif "Line:" in line:
                         line = line.replace("Line:", '')
-                        json_response['lines'] = [line.strip()]
+                        json_response['lines'] = [int(line.strip())]
                         output.append(json_response)
                 return Result(True, output, None).to_json()
