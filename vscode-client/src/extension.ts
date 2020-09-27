@@ -71,30 +71,40 @@ export function activate(context: ExtensionContext) {
           location: ProgressLocation.Notification,
           cancellable: false,
         };
-        window.withProgress(progressOptions, async (progress, token) => {
-          let result: ToolCommandOutput[] = await client.sendRequest(
-            new RequestType<
-              ActiveAnalysisParams,
-              ToolCommandOutput[],
-              void,
-              void
-            >('analyse'),
-            {
-              textDocument: { uri },
-              lang: editor.document.languageId,
-              tools,
+        window
+          .withProgress(progressOptions, async (progress, token) => {
+            let result: ToolCommandOutput[] = await client.sendRequest(
+              new RequestType<
+                ActiveAnalysisParams,
+                ToolCommandOutput[],
+                void,
+                void
+              >('analyse'),
+              {
+                textDocument: { uri },
+                lang: editor.document.languageId,
+                tools,
+              }
+            );
+            diagnosticsProvider.refreshDiagnostics(
+              editor.document,
+              result,
+              diagnosticCollection
+            );
+            analysisRunning = false;
+          })
+          .then(
+            () => {
+              window.showInformationMessage(
+                `Analysis finished, found ${JSON.stringify(
+                  diagnosticsProvider.numberOfProblems
+                )} problems`
+              );
+            },
+            (reason) => {
+              window.showErrorMessage('Failed to analyse file');
             }
           );
-          let problems = diagnosticsProvider.refreshDiagnostics(
-            editor.document,
-            result,
-            diagnosticCollection
-          );
-          analysisRunning = false;
-          window.showInformationMessage(
-            `Analysis finished, found ${JSON.stringify(problems)} problems`
-          );
-        });
       }
     } catch (error) {
       window.showErrorMessage('Failed to analyse file');
