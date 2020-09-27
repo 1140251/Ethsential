@@ -2,9 +2,7 @@
 
 [![Test](https://github.com/1140251/Ethsential/workflows/Test/badge.svg)](https://github.com/1140251/Ethsential/actions)
 [![Release](https://github.com/1140251/Ethsential/workflows/Release/badge.svg)](https://github.com/1140251/Ethsential/actions)
-
- <!-- <a href="https://github.com/smartbugs/smartbugs/releases">
-        <img alt="Smartbugs release" src="https://img.shields.io/github/release/smartbugs/smartbugs.svg"> -->
+[![PyPI](https://badge.fury.io/py/ethsential.svg)](https://pypi.python.org/pypi/ethsential)
 
 EthSential is a security analysis framework for Ethereum smart contracts. It bundles other tools to find vulnerabilities in smart contracts code.
 
@@ -46,3 +44,13 @@ Actions:
 ## IDE Integrations
 
 - **[VS Code](https://marketplace.visualstudio.com/items?itemName=1140251.ethsential)**
+
+## How to contribute
+
+Please read [CONTRIBUTING.md](https://github.com/1140251/Ethsential/blob/master/CONTRIBUTING.md) for details about how to proceed.
+
+Everyone interacting in Ethsential and its sub-projects' codebases and issue trackers, is expected to follow the Contributor Covenant [code of conduct](https://github.com/1140251/Ethsential/blob/master/CODE_OF_CONDUCT.md).
+
+## License
+
+This project is licensed under the Apache-2.0 license - see the [LICENSE.md](https://github.com/1140251/Ethsential/blob/master/LICENSE.md) file for details.
