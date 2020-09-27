@@ -38,10 +38,10 @@ setup(
     long_description=readme,
     author='Daniel Dias',
     install_requires=[
-        'docker==0.23.3',
+        'docker==4.2.1',
         'pygls==0.9.0'
     ],
-    # url='https://github.com/kennethreitz/samplemod',
+    url='https://github.com/1140251/Ethsential',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
