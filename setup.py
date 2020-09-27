@@ -17,10 +17,6 @@ VERSION = None
 with open('README.md', encoding="utf-8") as f:
     readme = '\n' + f.read()
 
-with open('LICENSE') as f:
-    license = f.read()
-
-
 # Load the package's __version__.py module as a dictionary.
 about = {}
 if not VERSION:
@@ -44,6 +40,6 @@ setup(
         'pygls==0.9.0'
     ],
     url='https://github.com/1140251/Ethsential',
-    license=license,
+    license="Apache-2.0",
     packages=find_packages(exclude=('tests', 'docs'))
 )
