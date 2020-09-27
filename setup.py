@@ -6,16 +6,16 @@ from setuptools import setup, find_packages
 # Package meta-data.
 NAME = "EthSential"
 DESCRIPTION = "Security analysis for Ethereum smart contracts"
-# URL = "https://github.com/ConsenSys/mythril"
+URL = "https://github.com/1140251/Ethsential"
 AUTHOR = "Daniel Dias"
-AUTHOR_MAIL = None
+AUTHOR_MAIL = "1140251@isep.ipp.pt"
 REQUIRES_PYTHON = ">=3.6.0"
 
 # If version is set to None then it will be fetched from __version__.py
 VERSION = None
 
-with open('README.md') as f:
-    readme = f.read()
+with open('README.md', encoding="utf-8") as f:
+    readme = '\n' + f.read()
 
 with open('LICENSE') as f:
     license = f.read()
@@ -36,7 +36,9 @@ setup(
     version=about["__version__"][1:],
     description='EthSential package for Python-Guide.org',
     long_description=readme,
-    author='Daniel Dias',
+    long_description_content_type='text/markdown',
+    author=AUTHOR,
+    author_mail=AUTHOR_MAIL,
     install_requires=[
         'docker==4.2.1',
         'pygls==0.9.0'
