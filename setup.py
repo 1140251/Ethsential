@@ -41,5 +41,6 @@ setup(
     ],
     url='https://github.com/1140251/Ethsential',
     license="Apache-2.0",
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    entry_points={"console_scripts": ["ethsent=ethsential.__main__:main"]},
 )
