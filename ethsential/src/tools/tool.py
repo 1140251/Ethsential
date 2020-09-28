@@ -21,3 +21,8 @@ class Tool(ABC):
     @property
     def lang_supported(self):
         raise NotImplementedError
+
+    def __eq__(self, other):
+        if type(other) is type(self) and other.image is self.image:
+            return self.__dict__ == other.__dict__
+        return False

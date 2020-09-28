@@ -7,7 +7,7 @@ def add_arguments(parser):
     tcp = sub.add_parser('tcp', help="Use TCP server")
     cli = sub.add_parser('cli', help="Use command line interface")
     sub.add_parser(
-        'install', aliases=['i', 'i', 'isntall', 'add'], help="Install tools")
+        'install', aliases=['i', 'isntall', 'add'], help="Install tools")
 
     tcp.add_argument('--host',
                      default="127.0.0.1",

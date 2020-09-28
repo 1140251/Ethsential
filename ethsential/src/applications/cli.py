@@ -13,7 +13,8 @@ class Command():
         files_to_analyze = []
         tools = []
         for tool in args.tools:
-            tools.extend(ToolFactory.createTool(tool))
+            new_tool = ToolFactory.createTool(tool)
+            tools.extend(x for x in new_tool if x not in tools)
         for file in args.file:
             # analyse files
             if not os.path.exists(file):

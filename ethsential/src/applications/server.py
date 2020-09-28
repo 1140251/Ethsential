@@ -26,7 +26,8 @@ async def doAnalysisFeat(ls: EthSencialLS, params):
 
     tools = []
     for tool in params.tools:
-        tools.extend(ToolFactory.createTool(tool))
+        new_tool = ToolFactory.createTool(tool)
+        tools.extend(x for x in new_tool if x not in tools)
     result = analyse_file(active_doc.path.replace(
         '\\', '/'), params.lang, tools)
     return result  # parse error TODO
@@ -36,7 +37,8 @@ async def doAnalysisFeat(ls: EthSencialLS, params):
 async def doInstallFeat(ls: EthSencialLS, params):
     tools = []
     for tool in params.tools:
-        tools.extend(ToolFactory.createTool(tool))
+        new_tool = ToolFactory.createTool(tool)
+        tools.extend(x for x in new_tool if x not in tools)
     try:
         install_tools(tools)
         return '200'
