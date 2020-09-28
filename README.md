@@ -32,13 +32,26 @@ $ pip install ethsential
 
 ## Usage
 
-Run `ethsent` without arguments to get more information:
+Run `ethsent -h` to get more information:
 
 ```text
 Usage: solhint [actions] [options] <file>
 
 Actions:
 
+  tcp                                                Use TCP server
+  cli                                                Use command line interface
+  install, i, isntall, add                           Install tools
+
+tcp optional arguments:
+  -h, --help                                         show this help message and exit
+  --host HOST                                        Bind to address (default=127.0.0.1)
+  -p, --port PORT                                    Bind to port (default=2087)
+
+cli arguments:
+  -h, --help                                         show this help message and exit
+  -f, --file FILE [FILE ...]                         select file(s) or directories to be analysed
+  -t, --tools [{all,mythril,securify,slither} ...]   select tool(s)
 ```
 
 ## IDE Integrations
