@@ -27,6 +27,10 @@ def add_arguments(parser):
                      choices=ToolFactory.TOOLS_CHOICES,
                      nargs='+',
                      help='select tool(s)', required=True)
+    cli.add_argument('-op', '--outputPath',
+                     type=str,
+                     default="result/",
+                     help='The full path for the new output directory, relative to the current workspace. By default, writes output to a folder named result/ in the current workspace.')
 
 
 def create_parser():

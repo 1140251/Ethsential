@@ -2,6 +2,8 @@ import os
 import multiprocessing
 import docker
 from solidity_parser import parser
+from time import time
+from datetime import timedelta
 client = docker.from_env()
 SOLIDITY_DEFAULT_VERSION = "0.6.4"
 
@@ -18,6 +20,7 @@ def mount_volumes(dir_path):
 
 def start_container(filePath, lang_version, volume_bindings, tool):
     container = None
+    start = time()
     try:
         cmd = tool.command.format(contract='/analysis/' + os.path.basename(filePath).replace(
             '\\', '/'), version=lang_version)
@@ -28,9 +31,11 @@ def start_container(filePath, lang_version, volume_bindings, tool):
 
         container.wait(timeout=(30 * 80))
         output = container.logs().decode('utf8').strip()
-        return tool.parse(output)
+        result = tool.parse(output)
+        result["duration"] = str(timedelta(seconds=round(time() - start)))
+        return result
     except Exception as exception:
-        return {"sucess": False, "exception": exception}
+        return {"sucess": False, "exception": str(exception), "duration": str(timedelta(seconds=round(time() - start)))}
     finally:
         stop_container(container)
         remove_container(container)

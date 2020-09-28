@@ -26,7 +26,7 @@ class Command():
                 files_to_analyze.append((file, 'vyper'))
                 # analyse dirs recursively
             elif os.path.isdir(file):
-                for root, files in os.walk(file):
+                for root, _, files in os.walk(file):
                     for name in files:
                         if name.endswith('.sol'):
                             files_to_analyze.append(
@@ -39,13 +39,17 @@ class Command():
                 raise ValueError(
                     '%s is not a directory or a solidity/vyper file' % file)
         for file, lang in files_to_analyze:
-
+            start = time()
             available_tools = list(
                 filter(lambda tool: lang in tool.lang_supported, tools))
             result = analyse_file(file, lang, available_tools)
             file_name = os.path.splitext(os.path.basename(file))[0]
-            with open(os.path.join(os.path.curdir, 'result_' + file_name + '_' + str(time()) + '.json'), 'w') as f:
-                json.dump(result, f, indent=2)
+            end = time()
+            result_file_full_path = args.outputPath + 'result_' + \
+                file_name + '_' + str(time()) + '.json'
+            with open(os.path.join(os.path.curdir, result_file_full_path), 'w') as f:
+                json.dump({"result": result, "duration": str(
+                    round(end-start))}, f, indent=2)
 
     def install(self):
         install_tools(ToolFactory.createTool('all'))
