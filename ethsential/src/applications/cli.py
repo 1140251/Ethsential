@@ -45,6 +45,9 @@ class Command():
             result = analyse_file(file, lang, available_tools)
             file_name = os.path.splitext(os.path.basename(file))[0]
             end = time()
+
+            if not os.path.exists(args.outputPath):
+                os.makedirs(args.outputPath)
             result_file_full_path = args.outputPath + 'result_' + \
                 file_name + '_' + str(time()) + '.json'
             with open(os.path.join(os.path.curdir, result_file_full_path), 'w') as f:
