@@ -29,11 +29,15 @@ class Slither(Tool):
 
                     for element in detector["elements"]:
                         json_response = {
-                            "severity": detector["impact"],
-                            "pattern": detector["check"],
-                            "description": detector["description"],
+                            "severity": detector["impact"] if(
+                                'impact' in detector) else "",
+                            "pattern": detector["check"] if(
+                                'check' in detector) else "",
+                            "description": detector["description"] if(
+                                'description' in detector) else "",
                             "lines": [int(i) for i in element["source_mapping"]["lines"]],
-                            "function": element["name"],
+                            "function": element["name"] if(
+                                'name' in detector) else "",
                             "contract": ""
                         }
 

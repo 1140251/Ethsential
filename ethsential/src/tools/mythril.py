@@ -27,15 +27,24 @@ class Mythril(Tool):
             if result["success"] and result['issues']:
                 for issue in result['issues']:
 
-                    json_response.append({
-                        "severity": issue["severity"],
-                        "pattern": issue["title"],
-                        "description": issue["description"],
-                        "lines": [int(issue["lineno"])],
-                        "function": issue["function"],
-                        "contract": issue["contract"],
+                    new_issue = {
+                        "severity": issue["severity"] if(
+                            'severity' in issue) else "",
+                        "pattern": issue["title"] if(
+                            'pattern' in issue) else "",
+                        "description": issue["description"] if(
+                            'description' in issue) else "",
+                        "lines": [int(issue["lineno"])] if(
+                            'lineno' in issue) else [],
+                        "function": issue["function"] if(
+                            'function' in issue) else "",
+                        "contract": issue["contract"] if(
+                            'contract' in issue) else "",
                         "raw_output": issue
-                    })
+                    }
+                    if('swc-id' in issue):
+                        new_issue["pattern"] += " - SWC ID=" + issue["swc-id"]
+                    json_response.append(new_issue)
 
                 return Result(True, json_response, None).to_json()
 
