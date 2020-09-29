@@ -23,8 +23,9 @@ class ParserTest(unittest.TestCase):
         self.assertRegex(mock_stderr.getvalue(
         ), 'the following arguments are required: -f/--file, -t/--tool')
 
-    def test_cli_pass(self):
-        parsed = self.parser.parse_args(['cli', '-f', 'test', '-t', 'all'])
+    def test_cli_full_pass(self):
+        parsed = self.parser.parse_args(
+            ['cli', '-f', 'test', 'p', '-t', 'all', 'mythril', '-op', 'example'])
         self.assertEqual(parsed.action, 'cli')
 
     @patch('sys.stderr', new_callable=StringIO)
