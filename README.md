@@ -52,6 +52,7 @@ cli arguments:
   -h, --help                                         show this help message and exit
   -f, --file FILE [FILE ...]                         select file(s) or directories to be analysed
   -t, --tools [{all,mythril,securify,slither} ...]   select tool(s)
+  -op, --outputPath                                  The full path for the new output directory, relative to the current workspace. (default=result/).
 ```
 
 ## IDE Integrations
