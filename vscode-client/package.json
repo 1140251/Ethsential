@@ -7,6 +7,13 @@
   "engines": {
     "vscode": "^1.47.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1140251/Ethsential.git"
+  },
+  "bugs": {
+    "url": "https://github.com/1140251/Ethsential/issues"
+  },
   "categories": [
     "Other"
   ],

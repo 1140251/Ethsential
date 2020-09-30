@@ -4,7 +4,7 @@
 [![Release](https://github.com/1140251/Ethsential/workflows/Release/badge.svg)](https://github.com/1140251/Ethsential/actions)
 [![PyPI](https://badge.fury.io/py/ethsential.svg)](https://pypi.python.org/pypi/ethsential)
 
-EthSential is a security analysis framework for Ethereum smart contracts. It bundles other tools to find vulnerabilities in smart contracts code.
+EthSential is a security analysis framework for Ethereum smart contracts. It bundles security analysis tools to find vulnerabilities in smart contracts code.
 
 ## Features
 
