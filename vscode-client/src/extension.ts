@@ -171,17 +171,9 @@ export function deactivate() {}
 
 function createLangServer(): LanguageClient {
   const cwd = path.join(__dirname, '../');
-  const pythonPath = workspace
-    .getConfiguration('python')
-    .get<string>('pythonPath');
-
-  if (!pythonPath) {
-    throw new Error('`python.pythonPath` is not set');
-  }
 
   const serverOptions: ServerOptions = {
-    args: ['-m', 'server'],
-    command: pythonPath,
+    command: 'ethsent',
     options: { cwd },
   };
   return new LanguageClient(`ethsential-client`, serverOptions, clientOptions);
