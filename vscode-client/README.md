@@ -26,11 +26,11 @@ The Visual Studio Code integration requires [Docker](https://docs.docker.com/ins
 Run the extension from the command palette by pressing (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac)
 and typing `EthSential`. Two commands should appear in the command palette.
 
-<img src="https://raw.githubusercontent.com/1140251/Ethsential/master/resources/vscode-analysis-execution-select.PNG" alt="select-command" width="900"/>
+<img src="https://raw.githubusercontent.com/1140251/Ethsential/master/vscode-client/resources/vscode-analysis-execution-select.PNG" alt="select-command" width="900"/>
 
 When the analysis is completed the diagonistics should be present in the source code and Problems tab.
 
-<img src="https://raw.githubusercontent.com/1140251/Ethsential/master/resources/vscode-analysis-execution-complete.PNG" alt="complete-command" width="900"/>
+<img src="https://raw.githubusercontent.com/1140251/Ethsential/master/vscode-client/resources/vscode-analysis-execution-complete.PNG" alt="complete-command" width="900"/>
 
 ## How to contribute
 
