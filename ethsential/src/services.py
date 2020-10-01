@@ -2,6 +2,7 @@ import os
 from time import time
 from datetime import timedelta
 import docker
+import multiprocessing
 from solidity_parser import parser
 client = docker.from_env()
 SOLIDITY_DEFAULT_VERSION = "0.6.4"
