@@ -2,7 +2,7 @@ import os
 from time import time
 from datetime import timedelta
 import docker
-import multiprocessing
+from joblib import Parallel, delayed
 from solidity_parser import parser
 client = docker.from_env()
 SOLIDITY_DEFAULT_VERSION = "0.6.4"
@@ -21,7 +21,6 @@ def mount_volumes(dir_path):
 def start_container(filePath, lang_version, volume_bindings, tool):
     container = None
     start = time()
-
     try:
         cmd = tool.command.format(contract='/analysis/' + os.path.basename(filePath).replace(
             '\\', '/'), version=lang_version)
@@ -62,14 +61,11 @@ def analyse_file(filePath, lang, tools):
     volume_bindings = mount_volumes(os.path.dirname(filePath))
     lang_version = get_lang_version(filePath, lang)
 
-    pool = multiprocessing.Pool(3)
     results = []
 
-    results = [pool.apply(start_container, args=(
-        filePath, lang_version, volume_bindings, tool)) for tool in tools]
-    pool.close()
-    pool.join()
-    pool.terminate()
+    results = Parallel(n_jobs=1)(delayed(start_container)(
+        filePath, lang_version, volume_bindings, tool) for tool in tools)
+    # results.append(result)
     return results
 
 
