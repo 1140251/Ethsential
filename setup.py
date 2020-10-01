@@ -37,7 +37,8 @@ setup(
     author_mail=AUTHOR_MAIL,
     install_requires=[
         'docker==4.2.1',
-        'pygls==0.9.0'
+        'pygls==0.9.0',
+        'joblib=0.16.0'
     ],
     url='https://github.com/1140251/Ethsential',
     license="Apache-2.0",
