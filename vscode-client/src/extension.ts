@@ -26,6 +26,7 @@ import { DiagnosticProvider } from './DiagnosticProvider';
 
 export let diagnosticsProvider: DiagnosticProvider;
 export let analysisRunning: boolean = false;
+export let installRunning: boolean = false;
 
 let client: LanguageClient;
 
@@ -102,7 +103,8 @@ export function activate(context: ExtensionContext) {
               );
             },
             (reason) => {
-              window.showErrorMessage('Failed to analyse file');
+              analysisRunning = false;
+              window.showErrorMessage('Failed to analyse file \n' + reason);
             }
           );
       }
@@ -131,21 +133,48 @@ export function activate(context: ExtensionContext) {
   }
 
   async function install() {
-    let tools: string[] = getActiveTools();
-
-    let result: String = await client.sendRequest(
-      new RequestType<ActiveInstallParams, String, void, void>('install'),
-      {
-        tools,
-      }
-    );
-
-    if (result == '200') {
-      window.showInformationMessage(`Installation completed`);
-    } else {
-      window.showErrorMessage(
-        'An error occurred during installation.\n' + result
+    let serverAvailable = await checkServer();
+    if (!serverAvailable) {
+      window.showInformationMessage(
+        `Docker is not available. Please start Docker`
       );
+      return;
+    }
+
+    if (!installRunning) {
+      installRunning = true;
+      let progressOptions: ProgressOptions = {
+        title: 'EthSential: Please wait while installation is performed...',
+        location: ProgressLocation.Notification,
+        cancellable: false,
+      };
+
+      window
+        .withProgress(progressOptions, async (progress, token) => {
+          let tools: string[] = getActiveTools();
+
+          let result: String = await client.sendRequest(
+            new RequestType<ActiveInstallParams, String, void, void>('install'),
+            {
+              tools,
+            }
+          );
+
+          if (result == '200') {
+            window.showInformationMessage(`Installation completed`);
+          } else {
+            window.showErrorMessage(
+              'An error occurred during installation.\n' + result
+            );
+          }
+          installRunning = false;
+        })
+        .then(
+          () => {},
+          () => {
+            installRunning = false;
+          }
+        );
     }
   }
 
@@ -176,7 +205,7 @@ function createLangServer(): LanguageClient {
     command: 'ethsent',
     options: { cwd },
   };
-  return new LanguageClient(`ethsential-client`, serverOptions, clientOptions);
+  return new LanguageClient(`ethsent`, serverOptions, clientOptions);
 }
 
 function createLangServerTCP(port: number): LanguageClient {

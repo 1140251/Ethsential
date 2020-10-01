@@ -1,9 +1,8 @@
 import os
-import multiprocessing
-import docker
-from solidity_parser import parser
 from time import time
 from datetime import timedelta
+import docker
+from solidity_parser import parser
 client = docker.from_env()
 SOLIDITY_DEFAULT_VERSION = "0.6.4"
 
@@ -21,6 +20,7 @@ def mount_volumes(dir_path):
 def start_container(filePath, lang_version, volume_bindings, tool):
     container = None
     start = time()
+
     try:
         cmd = tool.command.format(contract='/analysis/' + os.path.basename(filePath).replace(
             '\\', '/'), version=lang_version)
@@ -35,7 +35,7 @@ def start_container(filePath, lang_version, volume_bindings, tool):
         result["duration"] = str(timedelta(seconds=round(time() - start)))
         return result
     except Exception as exception:
-        return {"sucess": False, "exception": str(exception), "duration": str(timedelta(seconds=round(time() - start)))}
+        return {"success": False, "exception": str(exception), "duration": str(timedelta(seconds=round(time() - start)))}
     finally:
         stop_container(container)
         remove_container(container)
@@ -58,14 +58,17 @@ def remove_container(container):
 
 
 def analyse_file(filePath, lang, tools):
-
     volume_bindings = mount_volumes(os.path.dirname(filePath))
     lang_version = get_lang_version(filePath, lang)
-    pool = multiprocessing.Pool()
+
+    pool = multiprocessing.Pool(3)
     results = []
+
     results = [pool.apply(start_container, args=(
         filePath, lang_version, volume_bindings, tool)) for tool in tools]
     pool.close()
+    pool.join()
+    pool.terminate()
     return results
 
 
@@ -89,7 +92,6 @@ def get_lang_version(file, lang):
 
 def install_tools(tools):
     for tool in tools:
-        print('....installing ' + tool.image)
         try:
             client.images.pull(tool.image)
         except (docker.errors.APIError, docker.errors.BuildError, Exception) as error:
