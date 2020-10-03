@@ -6,15 +6,18 @@ from .mythril import Mythril
 class ToolFactoryTest(unittest.TestCase):
 
     def test_create_mythril_pass(self):
-        tools = ToolFactory.createTool('mythril')
+        tool_name = 'mythril'
+        tools = ToolFactory.createTool(tool_name)
         self.assertIsInstance(tools[0], Mythril)
 
     def test_create_all_pass(self):
-        tools = ToolFactory.createTool('all')
+        tool_name = 'all'
+        tools = ToolFactory.createTool(tool_name)
         self.assertEqual(len(tools), 3)
 
     def test_create_tool_fail(self):
         try:
-            _ = ToolFactory.createTool('tool')
+            tool_name = 'tool'
+            _ = ToolFactory.createTool(tool_name)
         except Exception as identifier:
             self.assertIsInstance(identifier, ValueError)

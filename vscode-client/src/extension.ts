@@ -21,8 +21,8 @@ import {
 import { TextDocumentIdentifier, RequestType } from 'vscode-languageserver';
 
 import * as Docker from 'dockerode';
-import { ToolCommandOutput } from './ToolResults';
-import { DiagnosticProvider } from './DiagnosticProvider';
+import { ToolCommandOutput } from './toolResults';
+import { DiagnosticProvider } from './diagnosticProvider';
 
 export let diagnosticsProvider: DiagnosticProvider;
 export let analysisRunning: boolean = false;
@@ -87,11 +87,7 @@ export function activate(context: ExtensionContext) {
                 tools,
               }
             );
-            diagnosticsProvider.refreshDiagnostics(
-              editor.document,
-              result,
-              diagnosticCollection
-            );
+            diagnosticsProvider.refreshDiagnostics(editor.document, result);
             analysisRunning = false;
           })
           .then(
@@ -184,10 +180,7 @@ export function activate(context: ExtensionContext) {
     client = createLangServer();
   }
 
-  const diagnosticCollection = languages.createDiagnosticCollection(
-    'EthSential'
-  );
-  diagnosticsProvider = new DiagnosticProvider();
+  diagnosticsProvider = new DiagnosticProvider('collectionName');
   context.subscriptions.push(
     client.start(),
     commands.registerTextEditorCommand('ethsential.analyse', analyse),

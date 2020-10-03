@@ -5,30 +5,31 @@ import {
   Diagnostic,
   DiagnosticSeverity,
   Uri,
+  languages,
 } from 'vscode';
 
-import { ToolCommandIssues, ToolCommandOutput } from './ToolResults';
+import { ToolCommandIssues, ToolCommandOutput } from './toolResults';
 
 export class DiagnosticProvider {
   private fileDiagnosticMap: Map<Uri, Diagnostic[]>;
   private fileResultMap: Map<string, ToolCommandIssues[]>;
+  private diagnosticCollection: DiagnosticCollection;
   numberOfProblems = 0;
 
-  constructor() {
+  constructor(collectionName: string) {
     this.fileDiagnosticMap = new Map<Uri, Diagnostic[]>();
     this.fileResultMap = new Map<string, ToolCommandIssues[]>();
+    this.diagnosticCollection = languages.createDiagnosticCollection(
+      collectionName
+    );
   }
 
   public refreshDiagnostics(
     document: TextDocument,
-    outputResults: ToolCommandOutput[],
-    diagnosticCollection: DiagnosticCollection
+    outputResults: ToolCommandOutput[]
   ) {
     // Clear the diagnostic.
-    diagnosticCollection.clear();
-    this.numberOfProblems = 0;
-    this.fileDiagnosticMap.clear();
-    this.fileResultMap.clear();
+    this.clearDiagnostic(this.diagnosticCollection);
 
     if (outputResults.length > 0) {
       for (let i = 0; i < outputResults.length; i++) {
@@ -36,33 +37,16 @@ export class DiagnosticProvider {
           continue;
         }
 
-        if (outputResults[i].success && outputResults[i].issues.length > 0) {
+        if (outputResults[i].issues.length > 0) {
           for (let j = 0; j < outputResults[i].issues.length; j++) {
-            let firstLine = document.lineAt(
-              outputResults[i].issues[j].lines[0].valueOf()
-            );
-            let lastElement: Number = outputResults[i].issues[j].lines.pop();
-            let lastLine = document.lineAt(lastElement.valueOf());
-            let textRange = new Range(
-              firstLine.range.start,
-              lastLine.range.end
+            let textRange = this.getTextRange(
+              document,
+              outputResults[i].issues[j].lines
             );
 
-            let severity: DiagnosticSeverity = DiagnosticSeverity.Information;
-            switch (outputResults[i].issues[j].severity.toLowerCase()) {
-              case 'critical':
-              case 'high':
-                severity = DiagnosticSeverity.Error;
-                break;
-              case 'medium':
-              case 'low':
-              case 'optimization':
-                severity = DiagnosticSeverity.Warning;
-                break;
-              default:
-                severity = DiagnosticSeverity.Information;
-                break;
-            }
+            let severity: DiagnosticSeverity = this.getDiagnosticSeverity(
+              outputResults[i].issues[j].severity
+            );
             let diagnosticResult: Diagnostic = new Diagnostic(
               textRange,
               outputResults[i].issues[j].description
@@ -92,12 +76,50 @@ export class DiagnosticProvider {
       }
 
       for (let [fileURI, diagnosticArray] of this.fileDiagnosticMap) {
-        diagnosticCollection.set(fileURI, diagnosticArray);
+        this.diagnosticCollection.set(fileURI, diagnosticArray);
       }
     }
 
-    this.numberOfProblems = diagnosticCollection.get(
+    this.numberOfProblems = this.diagnosticCollection.get(
       Uri.file(document.uri.fsPath)
     ).length;
+  }
+
+  private getTextRange(document: TextDocument, lines: Number[]) {
+    let textRange: Range;
+    if (lines.length > 0) {
+      let firstLine = document.lineAt(lines[0].valueOf());
+      let lastElement: Number = lines.pop();
+      let lastLine = document.lineAt(lastElement.valueOf());
+      textRange = new Range(firstLine.range.start, lastLine.range.end);
+    }
+    return textRange;
+  }
+
+  private getDiagnosticSeverity(severity: string) {
+    let dSeverity: DiagnosticSeverity = DiagnosticSeverity.Information;
+    switch (severity.toLowerCase()) {
+      case 'critical':
+      case 'high':
+        dSeverity = DiagnosticSeverity.Error;
+        break;
+      case 'medium':
+      case 'low':
+        dSeverity = DiagnosticSeverity.Warning;
+        break;
+      case 'optimization':
+        dSeverity = DiagnosticSeverity.Hint;
+      default:
+        dSeverity = DiagnosticSeverity.Information;
+        break;
+    }
+    return dSeverity;
+  }
+
+  private clearDiagnostic(diagnosticCollection: DiagnosticCollection) {
+    diagnosticCollection.clear();
+    this.numberOfProblems = 0;
+    this.fileDiagnosticMap.clear();
+    this.fileResultMap.clear();
   }
 }
