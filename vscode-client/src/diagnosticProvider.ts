@@ -89,9 +89,9 @@ export class DiagnosticProvider {
   private getTextRange(document: TextDocument, lines: Number[]) {
     let textRange: Range;
     if (lines.length > 0) {
-      let firstLine = document.lineAt(lines[0].valueOf());
+      let firstLine = document.lineAt(lines[0].valueOf() - 1);
       let lastElement: Number = lines.pop();
-      let lastLine = document.lineAt(lastElement.valueOf());
+      let lastLine = document.lineAt(lastElement.valueOf() - 1);
       textRange = new Range(firstLine.range.start, lastLine.range.end);
     }
     return textRange;
