@@ -8,17 +8,15 @@ import {
   languages,
 } from 'vscode';
 
-import { ToolCommandIssues, ToolCommandOutput } from './toolResults';
+import { ToolCommandIssue, ToolCommandOutput } from './toolResults';
 
 export class DiagnosticProvider {
   private fileDiagnosticMap: Map<Uri, Diagnostic[]>;
-  private fileResultMap: Map<string, ToolCommandIssues[]>;
   private diagnosticCollection: DiagnosticCollection;
   numberOfProblems = 0;
 
   constructor(collectionName: string) {
     this.fileDiagnosticMap = new Map<Uri, Diagnostic[]>();
-    this.fileResultMap = new Map<string, ToolCommandIssues[]>();
     this.diagnosticCollection = languages.createDiagnosticCollection(
       collectionName
     );
@@ -28,61 +26,64 @@ export class DiagnosticProvider {
     document: TextDocument,
     outputResults: ToolCommandOutput[]
   ) {
-    // Clear the diagnostic.
     this.clearDiagnostic(this.diagnosticCollection);
-
     if (outputResults.length > 0) {
       for (let i = 0; i < outputResults.length; i++) {
         if (outputResults[i].error || !outputResults[i].success) {
           continue;
         }
-
-        if (outputResults[i].issues.length > 0) {
-          for (let j = 0; j < outputResults[i].issues.length; j++) {
-            let textRange = this.getTextRange(
-              document,
-              outputResults[i].issues[j].lines
-            );
-
-            let severity: DiagnosticSeverity = this.getDiagnosticSeverity(
-              outputResults[i].issues[j].severity
-            );
-            let diagnosticResult: Diagnostic = new Diagnostic(
-              textRange,
-              outputResults[i].issues[j].description
-                ? outputResults[i].issues[j].description.replace(
-                    /^\s+|\s+$/g,
-                    ''
-                  )
-                : '',
-              severity
-            );
-            diagnosticResult.code = '';
-            diagnosticResult.relatedInformation = [];
-            diagnosticResult.source = '';
-
-            let diagnosticArray = this.fileDiagnosticMap.get(document.uri);
-            let resultArray = this.fileResultMap.get(document.uri.fsPath);
-            if (!diagnosticArray || !resultArray) {
-              diagnosticArray = [];
-              resultArray = [];
-              this.fileDiagnosticMap.set(document.uri, diagnosticArray);
-              this.fileResultMap.set(document.uri.fsPath, resultArray);
-            }
-            diagnosticArray.push(diagnosticResult);
-            resultArray.push(outputResults[i].issues[j]);
-          }
-        }
+        this.gatherDiagnostics(outputResults[i].issues, document);
       }
-
       for (let [fileURI, diagnosticArray] of this.fileDiagnosticMap) {
         this.diagnosticCollection.set(fileURI, diagnosticArray);
       }
     }
-
     this.numberOfProblems = this.diagnosticCollection.get(
       Uri.file(document.uri.fsPath)
     ).length;
+  }
+
+  private gatherDiagnostics(
+    issues: ToolCommandIssue[],
+    document: TextDocument
+  ) {
+    if (issues.length > 0) {
+      for (let j = 0; j < issues.length; j++) {
+        let textRange = this.getTextRange(document, issues[j].lines);
+
+        let severity: DiagnosticSeverity = this.getDiagnosticSeverity(
+          issues[j].severity
+        );
+        let diagnosticResult: Diagnostic = this.createDiagnosticResult(
+          textRange,
+          issues[j],
+          severity
+        );
+
+        let diagnosticArray = this.fileDiagnosticMap.get(document.uri);
+        if (!diagnosticArray) {
+          diagnosticArray = [];
+          this.fileDiagnosticMap.set(document.uri, diagnosticArray);
+        }
+        diagnosticArray.push(diagnosticResult);
+      }
+    }
+  }
+
+  private createDiagnosticResult(
+    textRange: Range,
+    issue: ToolCommandIssue,
+    severity: DiagnosticSeverity
+  ) {
+    let diagnosticResult: Diagnostic = new Diagnostic(
+      textRange,
+      issue.description ? issue.description.replace(/^\s+|\s+$/g, '') : '',
+      severity
+    );
+    diagnosticResult.code = '';
+    diagnosticResult.relatedInformation = [];
+    diagnosticResult.source = '';
+    return diagnosticResult;
   }
 
   private getTextRange(document: TextDocument, lines: Number[]) {
@@ -120,6 +121,5 @@ export class DiagnosticProvider {
     diagnosticCollection.clear();
     this.numberOfProblems = 0;
     this.fileDiagnosticMap.clear();
-    this.fileResultMap.clear();
   }
 }
