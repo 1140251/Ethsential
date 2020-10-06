@@ -41,3 +41,7 @@ Everyone interacting in Ethsential and its sub-projects' codebases and issue tra
 ## License
 
 This project is licensed under the Apache-2.0 license - see the [LICENSE.md](https://github.com/1140251/Ethsential/blob/master/LICENSE.md) file for details.
+
+## Feedback
+
+It would be great if you could spare 10 minutes of your time to fill out this [usability questionnaire](https://forms.office.com/Pages/ResponsePage.aspx?id=KaZgeh_mDEOcYyZmU7K4mZIDqDMQVa9DjdhP06kyJbJUNU9MRVlKUDdRM1dFVkdSMU5SMzAwM1AyTS4u).
